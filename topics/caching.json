@@ -1,0 +1,64 @@
+{
+  "id": "caching",
+  "title": "Caching",
+  "category": "Fundamentals",
+  "difficulty": "Intermediate",
+  "readTime": 10,
+  "tags": ["performance", "redis", "cdn"],
+  "overview": "Caching stores frequently accessed data in a fast-access layer (memory) to reduce latency and database load. A well-designed caching strategy can reduce response times from hundreds of milliseconds to single-digit milliseconds and cut database costs by 80% or more. The key challenge is cache invalidation — ensuring cached data stays consistent with the source of truth.",
+  "keyPoints": [
+    "Drastically reduces response time by serving data from memory instead of disk",
+    "Reduces load on databases and downstream services",
+    "Cache invalidation is one of the hardest problems in computer science",
+    "Cache hit ratio is the key metric — aim for 80%+ for read-heavy workloads",
+    "Write strategies determine consistency vs. performance trade-offs",
+    "TTL (Time-To-Live) controls cache freshness automatically"
+  ],
+  "concepts": [
+    {
+      "name": "Cache-Aside (Lazy Loading)",
+      "description": "Application checks cache first; on miss, loads from DB and populates cache. Simple and resilient — cache failures don't break the system. Risk: cache stampede on cold start."
+    },
+    {
+      "name": "Write-Through",
+      "description": "Data is written to cache and DB simultaneously on every write. Cache is always consistent with DB. Downside: higher write latency and wasted cache space for rarely-read data."
+    },
+    {
+      "name": "Write-Behind (Write-Back)",
+      "description": "Writes go to cache immediately; DB is updated asynchronously. Extremely fast writes, but data loss risk if cache fails before async write completes."
+    },
+    {
+      "name": "Read-Through",
+      "description": "Cache sits between app and DB. On cache miss, the cache itself loads from DB transparently. Simplifies application code but requires a cache that supports this pattern."
+    },
+    {
+      "name": "LRU Eviction",
+      "description": "Least Recently Used — evicts the item that was accessed least recently when cache is full. Best general-purpose eviction policy for most workloads."
+    }
+  ],
+  "tools": [
+    {
+      "name": "Redis",
+      "description": "In-memory data structure store, supports rich types (lists, sets, sorted sets), pub/sub, and persistence"
+    },
+    {
+      "name": "Memcached",
+      "description": "Simple, high-performance key-value cache. Multi-threaded, great for pure caching workloads"
+    },
+    {
+      "name": "Cloudflare / Fastly",
+      "description": "CDN-level edge caching for static assets and API responses with global PoPs"
+    },
+    {
+      "name": "Varnish",
+      "description": "HTTP accelerator designed for high-traffic websites, powerful VCL configuration language"
+    }
+  ],
+  "tradeoffs": "Caching improves read performance dramatically but introduces the risk of serving stale data. Short TTLs improve freshness but reduce cache effectiveness. Long TTLs improve performance but can serve outdated data. Cache invalidation by event (pub/sub or CDC) is more accurate but adds system complexity.",
+  "interviewTips": [
+    "Always address cache invalidation — when and how does stale data get evicted or refreshed?",
+    "Cache stampede / thundering herd is a common follow-up — use probabilistic early expiration or mutex locks",
+    "Discuss what data is a good candidate for caching (immutable or slowly changing reads)",
+    "For distributed caches, mention consistent hashing for key distribution across nodes"
+  ]
+}

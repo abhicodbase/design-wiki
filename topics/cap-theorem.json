@@ -1,0 +1,48 @@
+{
+  "id": "cap-theorem",
+  "title": "CAP Theorem",
+  "category": "Databases",
+  "difficulty": "Advanced",
+  "readTime": 10,
+  "tags": ["distributed-systems", "consistency", "availability"],
+  "overview": "The CAP Theorem (Brewer's Theorem) states that a distributed data store can guarantee at most two of three properties simultaneously: Consistency, Availability, and Partition Tolerance. Since network partitions are inevitable in real distributed systems, the real choice is between CP (consistency over availability) and AP (availability over consistency).",
+  "keyPoints": [
+    "Consistency: Every read receives the most recent write or an error",
+    "Availability: Every request receives a non-error response (may be stale)",
+    "Partition Tolerance: System continues to operate despite network partitions",
+    "Network partitions are unavoidable — the real trade-off is C vs A",
+    "PACELC extends CAP: considers latency vs consistency trade-off even without partitions",
+    "Most systems allow tunable consistency levels (strong, eventual, bounded staleness)"
+  ],
+  "concepts": [
+    {
+      "name": "CP Systems",
+      "description": "Prioritize Consistency over Availability during partitions. Nodes may refuse requests to prevent returning stale data. Examples: HBase, ZooKeeper, etcd, MongoDB (default)."
+    },
+    {
+      "name": "AP Systems",
+      "description": "Prioritize Availability over Consistency during partitions. All nodes respond but may return stale data. Examples: Cassandra, CouchDB, DynamoDB. Use eventual consistency."
+    },
+    {
+      "name": "Eventual Consistency",
+      "description": "Given no new updates, all replicas will eventually converge to the same value. The window of inconsistency is bounded. Acceptable for social feeds, shopping carts, DNS."
+    },
+    {
+      "name": "Strong Consistency",
+      "description": "All nodes see the same data at the same time. Every read reflects the latest committed write. Requires synchronous replication or consensus (Raft, Paxos)."
+    }
+  ],
+  "tools": [
+    { "name": "Cassandra", "description": "AP system with tunable consistency levels (ONE, QUORUM, ALL)" },
+    { "name": "ZooKeeper / etcd", "description": "CP systems used for distributed coordination and configuration" },
+    { "name": "DynamoDB", "description": "AP by default, offers optional strongly consistent reads at higher cost" },
+    { "name": "Spanner", "description": "Google's globally distributed CP database using TrueTime for external consistency" }
+  ],
+  "tradeoffs": "Choosing CP means some requests fail during partitions — acceptable for financial systems where stale data is costly. Choosing AP means requests always succeed but may serve stale data — acceptable for social media where consistency lag is tolerable. Most modern systems offer tunable consistency, allowing developers to choose per-operation.",
+  "interviewTips": [
+    "Examiners love asking 'which databases are CP vs AP' — memorize a few examples for each",
+    "Always clarify that partition tolerance is non-negotiable in a real distributed system",
+    "Discuss PACELC as an extension — even without partitions, there's a latency vs consistency trade-off",
+    "Eventual consistency is often sufficient — explain how to design idempotent operations around it"
+  ]
+}

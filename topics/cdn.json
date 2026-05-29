@@ -1,0 +1,48 @@
+{
+  "id": "cdn",
+  "title": "Content Delivery Networks",
+  "category": "Deployment",
+  "difficulty": "Beginner",
+  "readTime": 6,
+  "tags": ["cdn", "latency", "edge", "cloudflare"],
+  "overview": "A Content Delivery Network (CDN) is a geographically distributed network of servers (Points of Presence / PoPs) that cache content closer to end users. Instead of every request traveling to the origin server, users are served from the nearest edge node — dramatically reducing latency for static assets, and increasingly for dynamic content and APIs.",
+  "keyPoints": [
+    "Reduces latency by serving content from servers geographically close to users",
+    "Offloads bandwidth from origin servers — can absorb 90%+ of traffic",
+    "Provides DDoS protection and WAF capabilities at the edge",
+    "SSL/TLS termination at the edge reduces handshake overhead",
+    "Cache-Control headers control what CDNs cache and for how long",
+    "Edge computing (Cloudflare Workers, Lambda@Edge) enables running logic at PoPs"
+  ],
+  "concepts": [
+    {
+      "name": "Origin Pull",
+      "description": "CDN fetches content from origin on first request, then caches it at the edge. Cache-Control headers determine TTL. Most common CDN model."
+    },
+    {
+      "name": "Origin Push",
+      "description": "Content is proactively pushed to CDN edge nodes before users request it. Ensures instant availability but requires managing CDN as a deployment target."
+    },
+    {
+      "name": "Cache Invalidation",
+      "description": "When origin content changes, CDN cache must be invalidated. Options: wait for TTL expiry, send purge API calls, or use cache-busting URLs (versioned filenames)."
+    },
+    {
+      "name": "Anycast Routing",
+      "description": "CDN uses Anycast to route users to the nearest PoP at the network layer. The same IP address is announced from multiple locations; routing protocols find the nearest one."
+    }
+  ],
+  "tools": [
+    { "name": "Cloudflare", "description": "Most widely used CDN/WAF, global network, free tier, powerful edge computing with Workers" },
+    { "name": "AWS CloudFront", "description": "AWS-integrated CDN with Lambda@Edge, origins can be S3, ALB, or custom servers" },
+    { "name": "Fastly", "description": "Instant purging, real-time analytics, popular with media companies and SaaS" },
+    { "name": "Akamai", "description": "Largest CDN by PoP count, enterprise-focused with advanced security features" }
+  ],
+  "tradeoffs": "CDNs are nearly always beneficial for static assets. The trade-off is cache freshness — longer TTLs reduce origin load but serve stale content longer. Use versioned file names (e.g., app.abc123.js) for cache-busting without manual purges. Dynamic content caching (API responses) requires careful consideration of cache keys to avoid serving one user's data to another.",
+  "interviewTips": [
+    "Mention CDNs early in any system design involving global users — it's a quick win for latency",
+    "Discuss cache-busting strategies for deployments: versioned URLs vs. ETags vs. manual purges",
+    "CDNs also provide DDoS mitigation — mention this for high-traffic or public-facing systems",
+    "Edge computing at CDN PoPs can reduce origin load further for personalized content"
+  ]
+}

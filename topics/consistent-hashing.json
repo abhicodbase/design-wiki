@@ -1,0 +1,48 @@
+{
+  "id": "consistent-hashing",
+  "title": "Consistent Hashing",
+  "category": "Fundamentals",
+  "difficulty": "Advanced",
+  "readTime": 11,
+  "tags": ["hashing", "distributed-systems", "caching"],
+  "overview": "Consistent hashing is a distributed hashing technique that minimizes key remapping when nodes are added or removed from a cluster. In a standard hash table with N slots, adding a node requires remapping ~N/2 keys. Consistent hashing reduces this to remapping only ~K/N keys (K = total keys, N = nodes), making it ideal for distributed caches, load balancers, and storage systems.",
+  "keyPoints": [
+    "Maps both nodes and keys onto a circular hash ring (0 to 2^32)",
+    "A key is assigned to the next node clockwise on the ring",
+    "Adding or removing a node only affects the keys in one arc of the ring",
+    "Virtual nodes (vnodes) improve load distribution by giving each server multiple positions",
+    "Used in Cassandra, DynamoDB, Chord DHT, and distributed caches",
+    "Eliminates the modulo remapping problem of simple hash tables"
+  ],
+  "concepts": [
+    {
+      "name": "Hash Ring",
+      "description": "The ring represents the hash space (e.g., 0 to 2^32). Both servers and keys are hashed onto this ring. Each key is owned by the nearest server clockwise."
+    },
+    {
+      "name": "Virtual Nodes (Vnodes)",
+      "description": "Each physical server gets multiple positions on the ring. Prevents hotspots from non-uniform distribution and makes rebalancing smoother when nodes join/leave."
+    },
+    {
+      "name": "Node Addition",
+      "description": "New node takes over the arc from its predecessor. Only keys in that arc are remapped. All other keys remain unaffected — O(K/N) remappings."
+    },
+    {
+      "name": "Node Removal / Failure",
+      "description": "Failed node's keys are taken over by its successor. With replication, the successor may already have copies of those keys for zero data loss."
+    }
+  ],
+  "tools": [
+    { "name": "Cassandra", "description": "Uses consistent hashing with vnodes for data distribution across the cluster" },
+    { "name": "Amazon DynamoDB", "description": "Uses consistent hashing internally for partition distribution" },
+    { "name": "Riak", "description": "Distributed key-value store built on consistent hashing with automatic replication" },
+    { "name": "HAProxy / Nginx", "description": "Can implement consistent hashing for upstream server selection (sticky routing)" }
+  ],
+  "tradeoffs": "Without virtual nodes, consistent hashing can still lead to uneven key distribution since servers may cluster on the ring. Virtual nodes add configuration complexity but dramatically improve uniformity. The ring lookup is O(log N) with a sorted data structure. Consistent hashing trades perfect balance for minimal remapping — the right trade-off for dynamic distributed systems.",
+  "interviewTips": [
+    "Draw the ring — interviewers love visual explanations of consistent hashing",
+    "Explain why naive modulo hashing breaks when nodes are added/removed",
+    "Virtual nodes are the key to making consistent hashing work in practice — don't skip them",
+    "Mention replication: Cassandra replicates to the next N-1 nodes clockwise for fault tolerance"
+  ]
+}

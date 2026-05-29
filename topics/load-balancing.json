@@ -1,0 +1,64 @@
+{
+  "id": "load-balancing",
+  "title": "Load Balancing",
+  "category": "Fundamentals",
+  "difficulty": "Intermediate",
+  "readTime": 8,
+  "tags": ["networking", "scalability", "availability"],
+  "overview": "Load balancing distributes incoming requests across multiple servers to ensure no single server becomes a bottleneck. It improves system availability, fault tolerance, and enables horizontal scaling of infrastructure. A load balancer sits between the client and the server pool, routing each request to the most appropriate backend based on a configured algorithm.",
+  "keyPoints": [
+    "Distributes traffic evenly across multiple servers",
+    "Improves system availability and fault tolerance",
+    "Enables horizontal scaling of backend services",
+    "Can operate at Layer 4 (TCP/UDP) or Layer 7 (HTTP/HTTPS)",
+    "Provides health checks to route away from failed servers",
+    "Supports session persistence (sticky sessions) when needed"
+  ],
+  "concepts": [
+    {
+      "name": "Round Robin",
+      "description": "Sequentially routes requests to each server in turn. Simple and fast, but ignores server capacity and current load. Best for homogeneous server pools."
+    },
+    {
+      "name": "Weighted Round Robin",
+      "description": "Like round robin, but assigns more traffic to higher-capacity servers based on configured weights. Good when servers have different hardware specs."
+    },
+    {
+      "name": "Least Connections",
+      "description": "Routes to the server with the fewest active connections. Load-aware and adaptive, but adds overhead per request for tracking connection counts."
+    },
+    {
+      "name": "IP Hash",
+      "description": "Uses client IP to determine the target server, ensuring the same client always reaches the same server (sticky sessions). Can cause uneven distribution if many users share an IP."
+    },
+    {
+      "name": "Random",
+      "description": "Selects a random server for each request. Statistically approaches even distribution at scale with zero coordination overhead."
+    }
+  ],
+  "tools": [
+    {
+      "name": "HAProxy",
+      "description": "Open source, battle-tested, supports Layer 4 and Layer 7, excellent performance"
+    },
+    {
+      "name": "Nginx",
+      "description": "Lightweight, widely used in production, doubles as a reverse proxy and web server"
+    },
+    {
+      "name": "AWS ALB / ELB",
+      "description": "Fully managed AWS service with auto-scaling, SSL termination, and WAF integration"
+    },
+    {
+      "name": "F5 BIG-IP",
+      "description": "Enterprise-grade hardware/software solution with advanced security features"
+    }
+  ],
+  "tradeoffs": "Simple round-robin is fast but may be unfair under varying load. Sophisticated algorithms improve fairness and load distribution but add complexity and latency per request. Hardware load balancers offer extreme throughput but are expensive; software solutions like HAProxy are cost-effective for most workloads.",
+  "interviewTips": [
+    "Always ask if the system needs sticky sessions — this affects algorithm choice significantly",
+    "Distinguish between L4 (TCP) and L7 (HTTP) load balancing and when to use each",
+    "Health checks are critical — describe how the LB detects and routes around failures",
+    "Mention that the load balancer itself can be a SPOF — use active-passive or active-active HA pairs"
+  ]
+}

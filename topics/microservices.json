@@ -1,0 +1,64 @@
+{
+  "id": "microservices",
+  "title": "Microservices",
+  "category": "Architecture",
+  "difficulty": "Advanced",
+  "readTime": 13,
+  "tags": ["architecture", "decoupling", "docker"],
+  "overview": "Microservices architecture decomposes a monolithic application into small, independently deployable services each responsible for a specific business capability. Services communicate via APIs (REST, gRPC) or message queues. This enables teams to develop, deploy, and scale services independently, but introduces distributed system complexity around networking, data consistency, and observability.",
+  "keyPoints": [
+    "Each service owns a single business capability and its own data store",
+    "Services communicate via well-defined APIs or async message queues",
+    "Services can be deployed, scaled, and updated independently",
+    "Technology diversity — each service can use the best-fit language and database",
+    "Failure of one service should not cascade to others (fault isolation)",
+    "Requires strong DevOps maturity: CI/CD, container orchestration, service mesh"
+  ],
+  "concepts": [
+    {
+      "name": "Service Discovery",
+      "description": "Services register themselves and discover peers dynamically (Consul, Eureka, Kubernetes DNS). Avoids hardcoded service addresses in a dynamic environment."
+    },
+    {
+      "name": "API Gateway",
+      "description": "Single entry point for all clients. Handles routing, auth, rate limiting, SSL termination, and response aggregation. Reduces client complexity."
+    },
+    {
+      "name": "Circuit Breaker",
+      "description": "Prevents cascading failures by short-circuiting calls to failing services. States: Closed (normal), Open (failing), Half-Open (testing recovery)."
+    },
+    {
+      "name": "Saga Pattern",
+      "description": "Manages distributed transactions across services using a sequence of local transactions with compensating transactions for rollback. Avoids 2PC complexity."
+    },
+    {
+      "name": "Strangler Fig",
+      "description": "Migration pattern: gradually replace monolith features with microservices, routing traffic away from the old system piece by piece until it can be retired."
+    }
+  ],
+  "tools": [
+    {
+      "name": "Kubernetes",
+      "description": "Container orchestration platform for deploying, scaling, and managing microservices at scale"
+    },
+    {
+      "name": "Docker",
+      "description": "Container runtime that packages each service with its dependencies for consistent deployment"
+    },
+    {
+      "name": "Istio / Linkerd",
+      "description": "Service mesh providing traffic management, mTLS security, and observability between services"
+    },
+    {
+      "name": "Kong / AWS API Gateway",
+      "description": "API Gateway solutions for routing, auth, rate limiting, and analytics at the edge"
+    }
+  ],
+  "tradeoffs": "Microservices offer independent scaling and deployment but dramatically increase operational complexity. Network calls replace in-process function calls, adding latency and failure modes. Data consistency across services requires eventual consistency patterns (Saga, Outbox). Observability requires distributed tracing (Jaeger, Zipkin). Teams must invest heavily in DevOps tooling before realizing microservices benefits.",
+  "interviewTips": [
+    "Start with 'When not to use microservices' — a monolith is often the right choice early on",
+    "Discuss how services communicate: sync (REST/gRPC) vs async (Kafka/RabbitMQ) and the trade-offs",
+    "Address data management — each service should own its database (database-per-service pattern)",
+    "Mention the Twelve-Factor App methodology for building cloud-native microservices"
+  ]
+}

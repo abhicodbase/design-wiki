@@ -1,0 +1,60 @@
+{
+  "id": "database-sharding",
+  "title": "Database Sharding",
+  "category": "Databases",
+  "difficulty": "Advanced",
+  "readTime": 12,
+  "tags": ["database", "scalability", "partitioning"],
+  "overview": "Database sharding is a horizontal scaling technique where data is partitioned across multiple database instances (shards). Each shard holds a subset of the total data, enabling the system to handle more data and higher throughput than a single database server. Sharding is typically the last resort after optimizing queries, adding indexes, read replicas, and vertical scaling.",
+  "keyPoints": [
+    "Horizontally partitions data across multiple database servers (shards)",
+    "Each shard is an independent database containing a subset of the data",
+    "A shard key determines which shard a record belongs to",
+    "Eliminates the scalability ceiling of a single database node",
+    "Cross-shard queries and transactions are complex and expensive",
+    "Rebalancing shards when adding new nodes is a major operational challenge"
+  ],
+  "concepts": [
+    {
+      "name": "Range-Based Sharding",
+      "description": "Data is divided by ranges of the shard key (e.g., user IDs 1-1M → shard 1, 1M-2M → shard 2). Simple to implement, but can create hot spots if data isn't uniformly distributed."
+    },
+    {
+      "name": "Hash-Based Sharding",
+      "description": "A hash function is applied to the shard key to evenly distribute data across shards. Eliminates hot spots but makes range queries across shards impossible."
+    },
+    {
+      "name": "Directory-Based Sharding",
+      "description": "A lookup table (directory) maps shard keys to shards. Flexible — shards can be added without rehashing — but the directory itself becomes a bottleneck and single point of failure."
+    },
+    {
+      "name": "Geo Sharding",
+      "description": "Data is partitioned by geographic region (e.g., EU data on EU shards, US data on US shards). Reduces latency and satisfies data residency requirements."
+    }
+  ],
+  "tools": [
+    {
+      "name": "Vitess",
+      "description": "MySQL sharding middleware used by YouTube, built for massive horizontal scaling"
+    },
+    {
+      "name": "MongoDB",
+      "description": "Native sharding support with automatic chunk balancing across shards"
+    },
+    {
+      "name": "CockroachDB",
+      "description": "Distributed SQL with automatic sharding and strong consistency via Raft consensus"
+    },
+    {
+      "name": "Amazon DynamoDB",
+      "description": "Managed NoSQL with automatic partitioning; partition key is the shard key"
+    }
+  ],
+  "tradeoffs": "Sharding greatly improves write throughput and storage capacity but comes at the cost of increased operational complexity. Cross-shard joins become application-level operations. Distributed transactions require 2PC or saga patterns. Hot shards (uneven distribution) can undermine the performance gains. Consider sharding only after exhausting vertical scaling and read replicas.",
+  "interviewTips": [
+    "Always discuss shard key selection — it's the most critical decision in sharding design",
+    "A poor shard key causes hot spots that defeat the purpose of sharding",
+    "Discuss resharding — adding a new shard requires moving data, which must be done live",
+    "Compare sharding vs. read replicas for read-heavy vs. write-heavy workloads"
+  ]
+}
